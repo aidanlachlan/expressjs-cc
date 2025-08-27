@@ -1,5 +1,6 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
+const port = process.env.PORT || 8000;
 
 const app = express();
 
@@ -17,15 +18,30 @@ const app = express();
 // })
 
 let posts = [
-    {id: 1, title: 'Post One'},
-    {id: 2, title: 'Post Two'},
-    {id: 3, title: 'Post Three'}    
-]
+  { id: 1, title: "Post One" },
+  { id: 2, title: "Post Two" },
+  { id: 3, title: "Post Three" },
+];
 
-app.get('/api/posts', (req, res) => {
+// get all posts
+app.get("/api/posts", (req, res) => {
+  // console.log(req.query); // query params
+  const limit = parseInt(req.query.limit);
+
+  if (!isNaN(limit) && limit > 0) {
+    return res.json(posts.slice(0, limit));
+  } else {
     res.json(posts);
-})
+  }
+});
 
-app.listen(8000, () => {
-    console.log('Server is running on port 8000');
+// get a single post
+app.get("/api/posts/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  res.json(posts.filter((post) => post.id === id));
+});
+
+app.listen(port, () => {
+  console.log(`server started on port ${port}`);
 });
