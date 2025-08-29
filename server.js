@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import logger from "./middleware/logger.js";
 import posts from "./routes/posts.js";
+import errorHandler from "./middleware/error.js";
 const port = process.env.PORT || 8000;
 
 
@@ -17,20 +18,18 @@ app.use(logger)
 // setup static folder
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', (req, res) => {
-//     // res.send('<h1>Hello, World!</h1>'); // can send HTML
-//     // res.send({message: 'JSON!'}); // can send JSON
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// })
-
-// app.get('/about', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'about.html'));
-// })
-
 
 // Routes
 app.use('/api/posts', posts);
 
+app.use((req, res, next) => {
+  const error = new Error('Not Found');
+  error.status = 404;
+  next(error);
+});
+
+// Error handling middleware
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`server started on port ${port}`);
