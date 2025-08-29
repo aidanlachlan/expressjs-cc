@@ -7,6 +7,8 @@ let posts = [
   { id: 3, title: "Post Three" },
 ];
 
+
+//get all posts
 router.get("/", (req, res) => {
   // console.log(req.query); // query params
   const limit = parseInt(req.query.limit);
